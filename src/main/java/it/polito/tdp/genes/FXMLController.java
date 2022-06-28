@@ -5,8 +5,11 @@
 package it.polito.tdp.genes;
 
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.genes.model.Adiacenza;
 import it.polito.tdp.genes.model.Genes;
 import it.polito.tdp.genes.model.Model;
 import javafx.event.ActionEvent;
@@ -30,7 +33,7 @@ public class FXMLController {
     private Button btnCreaGrafo; // Value injected by FXMLLoader
 
     @FXML // fx:id="cmbGeni"
-    private ComboBox<?> cmbGeni; // Value injected by FXMLLoader
+    private ComboBox<Genes> cmbGeni; // Value injected by FXMLLoader
 
     @FXML // fx:id="btnGeniAdiacenti"
     private Button btnGeniAdiacenti; // Value injected by FXMLLoader
@@ -46,18 +49,52 @@ public class FXMLController {
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
+    	txtResult.clear();
+    	String ris = this.model.creaGrafo();
+    	txtResult.setText(ris);
+    	cmbGeni.getItems().clear();
+    	cmbGeni.getItems().addAll(this.model.getVertici());
     	
 
     }
 
     @FXML
     void doGeniAdiacenti(ActionEvent event) {
+    	Genes g = cmbGeni.getValue();
+    	if(g==null) {
+    		txtResult.setText("Scegli un gene");
+    		return;
+    	}
+    	List<Adiacenza> ris = this.model.getAdiacenti(g);
+    	txtResult.appendText("Geni adiacenti a "+g.getGeneId()+"\n");
+    	for(Adiacenza a: ris)
+    		txtResult.appendText(a.toString()+"\n");
 
     	
     }
 
     @FXML
     void doSimula(ActionEvent event) {
+    	txtResult.clear();
+    	String n=txtIng.getText();
+    	try {
+    		int num = Integer.parseInt(n);
+    		Genes g= cmbGeni.getValue();
+        	if(g==null) {
+        		txtResult.setText("Scegli un gene");
+        		return;
+        	}
+        	Map<String,Genes> ris = this.model.simula(g, num);
+        	txtResult.setText("Simulazione effettuata con "+num+" ingegneri!\n");
+        	for(Genes gg: ris.values()) {
+        		if(gg.getIngAllocati()!=0)
+        			txtResult.appendText(gg.getGeneId()+" / num. ingegneri associati: "+gg.getIngAllocati()+"\n");
+        	}
+    		
+    	}catch(NumberFormatException e) {
+    		txtResult.setText("Inserire un numero intero");
+    		return;
+    	}
 
     }
 

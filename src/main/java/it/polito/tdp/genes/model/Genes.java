@@ -1,16 +1,18 @@
 package it.polito.tdp.genes.model;
 
-public class Genes {
+public class Genes implements Comparable<Genes> {
 	
 	private String geneId;
 	private String essential;
 	private int chromosome;
+	private int ingAllocati;
 	
 	public Genes(String geneId, String essential, int chromosome) {
 		super();
 		this.geneId = geneId;
 		this.essential = essential;
 		this.chromosome = chromosome;
+		this.ingAllocati=0;
 	}
 
 	public String getGeneId() {
@@ -35,6 +37,22 @@ public class Genes {
 
 	public void setChromosome(int chromosome) {
 		this.chromosome = chromosome;
+	}
+	
+
+	public int getIngAllocati() {
+		return ingAllocati;
+	}
+
+	public void setIngAllocati(int ingAllocati) {
+		this.ingAllocati = ingAllocati;
+	}
+
+	public void incrementaIngAllocati() {
+		this.ingAllocati++;
+	}
+	public void decrementaIngAllocati() {
+		this.ingAllocati--;
 	}
 
 	@Override
@@ -65,6 +83,11 @@ public class Genes {
 	@Override
 	public String toString() {
 		return this.geneId;
+	}
+
+	@Override
+	public int compareTo(Genes o) {
+		return this.geneId.compareTo(o.geneId);
 	}
 
 
